@@ -92,8 +92,16 @@ module Billy
     end
 
     def whitelisted_url?(url)
+      return true if whitelisted_request?(url)
+
       !Billy.config.whitelist.index do |v|
         v =~ /^#{url.host}(?::#{url.port})?$/
+      end.nil?
+    end
+
+    def whitelisted_request?(url)
+      !Billy.config.whitelisted_patterns.index do |pattern|
+        url.to_s.match(pattern)
       end.nil?
     end
 
